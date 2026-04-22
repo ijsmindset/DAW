@@ -1,0 +1,152 @@
+Tema 2: Introducción a los servidores web
+FP Superior DAW (MEDAC)
+1. Objetivos del tema (según el PDF)
+Conocer el funcionamiento de un servidor web
+
+Conocer los servidores web más utilizados
+
+Ser capaz de instalar y configurar un servidor web
+
+Ser capaz de instalar y configurar PHP y MySQL
+
+Tener un primer contacto con el sistema Docker
+
+2. Funcionamiento de un servidor web
+2.1. Definición de servidor web (según el PDF)
+Concepto	Descripción
+Servidor web (software)	Software preparado para escuchar permanentemente peticiones de los clientes y ofrecer la respuesta correcta (entregar la página web o listar mensaje de error si la petición es incorrecta)
+Servidor web (hardware)	Equipo físico que realiza estas funciones
+2.2. Ejecución en cliente vs servidor
+Tipo	Descripción	Ejemplos (del PDF)
+Ejecución en el cliente	Código que se puede abrir directamente en un navegador web	HTML, CSS, JavaScript
+Ejecución en el servidor	Programas que requieren un preprocesador en el servidor para ejecutarse	PHP, Python, Perl, Ruby
+2.3. Componentes adicionales del servidor web
+Componente	Función según el PDF
+PHP	Lenguaje que no se ejecuta en el cliente, si no en el servidor. Permite procesar código que HTML no puede ejecutar
+MySQL	Gestor de bases de datos relacional que gestiona la base de datos y garantiza la integridad de los datos
+Alternativas a MySQL	MariaDB, PostgreSQL, SQLite
+3. Tipos de servidores web según licencia
+3.1. Clasificación
+Tipo	Característica	Ejemplos del PDF
+Servidores web libres o de código abierto (Open Source)	Permiten su uso de manera gratuita	Apache, Nginx
+Servidores web propietarios	Requieren una licencia para poder usarlo	Microsoft IIS, Nginx Plus (versión comercial de Nginx)
+4. Servidores web más utilizados (según el PDF)
+4.1. Apache
+Característica	Descripción
+Licencia	Open Source
+Plataforma	Multiplataforma (Windows, Linux, Unix)
+Primera aparición	Abril de 1995
+Posición en el mercado	Servidor web más utilizado en todo el mundo
+4.2. Nginx
+Característica	Descripción
+Licencia	Open Source
+Plataforma	Multiplataforma (Windows, Linux, Unix)
+Primera aparición	Octubre de 2004
+Característica destacada	Destaca por su alto rendimiento
+4.3. Microsoft IIS (Internet Information Services)
+Característica	Descripción
+Licencia	Propietario (aunque no conlleva coste adquirirlo, se instala sobre S.O. con licencia comercial)
+Plataforma	NO es multiplataforma (solo Windows)
+Primera aparición	Mayo de 1995 (con Windows NT 3.51)
+Instalación	Como "característica" desde Panel de Control (sistemas de escritorio) o como "rol" (Windows Server)
+Carpeta raíz	C:\inetpub\wwwroot
+5. Tabla comparativa de servidores web (según el PDF)
+Característica	Apache	Nginx	IIS
+Open Source	SÍ	SÍ	NO
+SSL/TSL	SÍ	SÍ	SÍ
+Proxy Inverso	SÍ	SÍ	SÍ
+Primera aparición	1995	2004	1995
+PHP Nativo	NO	NO	NO
+Multiplataforma	SÍ	SÍ	NO
+6. Instalación de servidores web
+6.1. WAMP (para Windows)
+Concepto	Descripción
+¿Qué es WAMP?	Paquete que incluye Apache, MySQL y PHP para agilizar la instalación en Windows
+Carpeta raíz	C:\wamp\www
+Comprobación de PHP	Crear info.php con <?php phpinfo(); ?> y acceder a http://localhost/info.php
+6.2. Instalación de IIS en Windows 10
+Vía: Panel de Control > Programas > Activar o desactivar características de Windows
+
+Carpeta raíz: C:\inetpub\wwwroot
+
+Herramienta para PHP y MySQL: Microsoft Web Platform Installer
+
+6.3. Instalación de IIS en Windows Server
+Vía: Administrador del servidor > Agregar roles y características > Seleccionar Servidor web (IIS) como rol
+
+6.4. Instalación de Apache en Ubuntu Server (comandos del PDF)
+Paso	Comando	Función
+1	sudo apt-get update && sudo apt-get upgrade	Actualizar repositorios y paquetes
+2	sudo apt-get install apache2 apache2-utils	Instalar Apache y utilidades
+3	Instalar MySQL	Configurar contraseña del usuario root
+4	Instalar PHP + módulos	php7.2, módulo PHP para Apache, módulo de conexión con MySQL, php7.2-common
+5	sudo systemctl restart apache2	Reiniciar Apache para aplicar cambios y habilitar PHP
+6	Añadir ServerName a /etc/apache2/apache.conf	Solucionar aviso de configuración
+6.5. Instalación de Nginx en Ubuntu Server
+Paso	Comando/Función
+1	Instalar nginx y nginx-common
+2	Instalar mysql-server
+3	Instalar php-fpm (FastCGI Process Manager)
+4	Editar /etc/nginx/sites-available/default para habilitar PHP manualmente
+5	nginx -t (comprobar que cambios son válidos)
+6	Recargar servicio para activar PHP
+Diferencia clave con Apache: En Nginx no es suficiente con reiniciar para activar PHP, necesita habilitarse manualmente.
+
+7. Docker
+7.1. Definición y propósito (según el PDF)
+Concepto	Descripción
+Docker	Proyecto que sirve para automatizar el despliegue de aplicaciones de forma rápida y optimizando el uso de recursos
+Primer contacto	El PDF indica que es un "primer contacto" con el sistema Docker
+7.2. Comandos Docker vistos en el PDF
+Comando	Función
+sudo docker search apache	Localizar imágenes disponibles (ejemplo: httpd es la imagen oficial de Apache)
+sudo docker run -d --name Apache -p 8081:80 httpd	Instalar imagen y redireccionar puerto al 8081 (modo detach)
+7.3. Caso práctico Docker (según el PDF)
+Objetivo: Desplegar Apache con Docker en Ubuntu
+
+Puerto configurado: 8081
+
+Imagen utilizada: httpd (imagen oficial del proyecto Apache HTTP Server)
+
+8. Casos prácticos del PDF (resumen)
+Caso práctico 1: "Instalación Apache en Windows"
+Escenario: Empresa con Windows, necesita alojar web desarrollada
+
+Solución: Apache es multiplataforma, se puede instalar en Windows usando WAMP (incluye Apache, MySQL, PHP)
+
+Comprobación: Crear info.php en C:\wamp\www y acceder a http://localhost/info.php
+
+Caso práctico 2: "Desplegar Apache con Docker"
+Escenario: Servidor Ubuntu, quiere probar contenedores Docker
+
+Solución: Instalar Docker → buscar imagen httpd → docker run -d --name Apache -p 8081:80 httpd
+
+Comprobación: Acceder mediante navegador al puerto 8081
+
+Resolución del caso práctico inicial
+Problema: Servidor obsoleto (no soporta actualizaciones), brechas de seguridad, web estática en HTML
+
+Soluciones planteadas:
+
+Migrar a servidor Cloud con Apache + PHP + MySQL
+
+Cambiar web estática por CMS como WordPress (mayor atractivo visual, actualización sencilla)
+
+Factores evaluados: antigüedad del servidor, brechas de seguridad sin parche, imagen obsoleta
+
+9. Términos clave para examen (negritas del PDF)
+Término	Definición según el PDF
+Conocer el funcionamiento de un servidor web	Software que escucha peticiones y ofrece respuesta correcta
+Conocer los servidores web más utilizados	Apache, Nginx, Microsoft IIS
+Ser capaz de instalar y configurar un servidor web	Instalación básica de Apache, Nginx e IIS
+Ser capaz de instalar y configurar PHP y MySQL	Componentes para procesar código en servidor y gestionar BBDD
+Tener un primer contacto con el sistema Docker	Automatizar despliegue de aplicaciones optimizando recursos
+Servidores web libres o de código abierto (Open Source)	Uso gratuito: Apache y Nginx
+Servidores web propietarios	Requieren licencia: Microsoft IIS, Nginx Plus
+Apache	Open Source, multiplataforma, más utilizado del mundo (1995)
+Nginx	Open Source, multiplataforma, alto rendimiento (2004)
+Microsoft IIS	Propietario, solo Windows, se instala como "característica" o "rol"
+Docker	Automatizar despliegue rápido optimizando recursos
+WAMP	Paquete que incluye Apache, MySQL y PHP para Windows
+PHP	Lenguaje que se ejecuta en el servidor (no en el cliente)
+MySQL	Gestor de bases de datos relacional
