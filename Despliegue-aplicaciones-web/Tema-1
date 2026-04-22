@@ -1,0 +1,197 @@
+Despliegue de aplicaciones web - Tema 1: Arquitecturas web
+FP Superior DAW (MEDAC)
+1. Introducción a la arquitectura web
+1.1. Objetivos del tema (según el PDF)
+Conocer el concepto de arquitectura web.
+
+Analizar los diferentes modelos y sus características.
+
+Valorar puntos a favor y en contra de cada modelo según la finalidad.
+
+Seleccionar el modelo de arquitectura que más se adapte a las necesidades de nuestro desarrollo.
+
+1.2. ¿Qué es la WWW?
+World Wide Web: red de equipos interconectada a través de internet que permite compartir información.
+
+Nace gracias a la unión de: HTTP, HTML y URL.
+
+2. Componentes fundamentales de la arquitectura web
+2.1. HTTP (HyperText Transfer Protocol)
+Propiedad	Descripción
+¿Qué es?	Protocolo diseñado para transferir documentos HTML
+Puerto por defecto	TCP 80
+Capa OSI	Capa 7 (capa de aplicación) - misma capa que DNS, FTP y SSH
+Funcionamiento	Las conexiones HTTP siempre se inician en el cliente
+2.2. HTML (HyperText Markup Language)
+Propiedad	Descripción
+¿Qué es?	Lenguaje de programación basado en etiquetas
+¿Para qué sirve?	Crear documentos visualmente agradables que facilitan la lectura (estilos de texto, imágenes, tablas, contenido multimedia)
+HTML5	Quinta versión liberada por la W3C en 2014. Incorpora nuevas etiquetas para mejorar la compatibilidad con audio y vídeo
+2.3. URL (Uniform Resource Locator)
+Propiedad	Descripción
+¿Qué es?	Nomenclatura utilizada para hacer referencia a objetos y poder localizar información de manera rápida y sencilla
+Estructura	esquema://servidor/directorio/archivo → Ejemplo: http://apache.org/
+Esquemas más conocidos	http, https, ftp, file, mailto
+3. Evolución de la arquitectura web
+3.1. Contexto histórico
+Años 90: Aparición del hipervínculo por Tim Berners-Lee.
+
+Antes: Acceso a internet casi exclusivamente en universidades y gobiernos. Primeros navegadores sin interfaz gráfica (terminal con menús en árbol).
+
+1994: Berners-Lee funda el W3C (World Wide Web Consortium) → organización que regula recomendaciones y estándares para asegurar compatibilidad y evolución de los servicios web.
+
+3.2. Ventajas de las aplicaciones web frente a aplicaciones de escritorio
+Según el PDF, las aplicaciones web ofrecen:
+
+Facilidad de despliegue de nuevo software en los clientes
+
+Centralización de la información
+
+Seguridad mejorada con sistemas como SSO (Single Sign-On) - iniciar sesión autenticando contra un controlador de dominio Windows
+
+Compatibilidad con cualquier sistema operativo
+
+Reducción de costes
+
+3.3. Thin clients
+thin clients: utilizan el modelo original de terminal boba (dumb terminal) que se conecta a un servidor.
+
+Ventaja: no necesitan ordenadores potentes para ejecutar aplicaciones.
+
+4. Tipos y modelos de arquitectura web
+El PDF establece tres modelos fundamentales:
+
+4.1. Modelo P2P
+Característica	Descripción
+Topología	Malla - todos los equipos interconectados entre sí
+Rol de los nodos	Cada nodo realiza funciones de cliente y de servidor
+Ejemplo real	Compartir archivos usando Torrent
+Localización de información	Repartida entre los diferentes servidores o peers (no en un único equipo)
+Ventajas del modelo P2P:
+Descentralización: información repartida entre todos los nodos. Si uno cae, el resto siguen operativos.
+
+Escalabilidad: a medida que el número de nodos aumente, la red funcionará de manera más eficiente.
+
+Carga de trabajo repartida entre los diferentes nodos: ningún nodo tiene mayor importancia que el resto.
+
+Inconvenientes del modelo P2P:
+Posibilidad de información duplicada o inconsistente
+
+Mayor número de equipos que mantener (mayor mantenimiento que en modelo C/S)
+
+4.2. Modelo cliente-servidor (C/S)
+Característica	Descripción
+Centralización	Toda la información se centraliza en un único servidor
+Cliente	navegador web que realiza las peticiones
+Servidor	equipo con funcionalidades especiales preparado para actuar como servidor web. Puede responder de forma autónoma sin consultar a otro servidor
+Ventajas del modelo cliente-servidor:
+Mantenimiento: solo es necesario mantener un servidor web (no una red entera)
+
+Información y recursos centralizados: integridad y seguridad gestionadas por el servidor
+
+Posibilidad de balanceo de carga entre varios servidores
+
+Inconvenientes del modelo cliente-servidor:
+Riesgo de congestión: si la infraestructura no está preparada, ante muchas peticiones simultáneas el servicio puede verse afectado
+
+Si el servidor está caído, no se podrá acceder a los recursos
+
+Hardware más potente necesario: un único servidor afronta gran carga de trabajo
+
+4.3. Modelo de tres capas
+Característica	Descripción
+Definición	Evolución del modelo C/S que añade servidores especializados en una función para optimizar el rendimiento
+Servidor de BBDD	encargado de almacenar y resolver las consultas
+Servidor web	encargado de servir el contenido solicitado por el cliente
+Funcionamiento del modelo de tres capas (secuencia):
+El cliente hace una petición al servidor web o servidor de aplicaciones
+
+El servidor web se comunica con la base de datos para realizar las consultas necesarias
+
+El servidor de BBDD procesa las consultas y devuelve las respuestas únicamente al servidor web
+
+El servidor web devuelve la información solicitada al cliente
+
+Ventajas del modelo de tres capas:
+Mayor seguridad que el modelo C/S al poder definir permisos por niveles
+
+Mayor flexibilidad al existir servidores especializados
+
+Mejor rendimiento al compartir tareas entre los diferentes servidores
+
+Inconvenientes del modelo de tres capas:
+Es necesario aumentar el número de servidores
+
+Se genera mayor tráfico de red entre los diferentes servidores
+
+Riesgo de seguridad si no se configura correctamente: el servidor web y el de BBDD intercambian paquetes de red con las consultas
+
+Posible mayor tiempo de espera para el cliente debido a los procesos internos entre servidores
+
+5. Tabla comparativa de los tres modelos
+Característica	P2P	Cliente-Servidor	Tres capas
+Riesgo de congestión	NO	SÍ	SÍ
+Información centralizada	NO	SÍ	SÍ
+Disponibilidad de datos si el servidor principal falla	SÍ	NO	NO
+Mantenimiento complicado	SÍ	NO	NO
+Mejor rendimiento que su predecesor	-	SÍ	SÍ
+Observaciones adicionales (según el PDF):
+El modelo P2P tendrá un mejor rendimiento cuanto más grande sea la red.
+
+En el modelo C/S solo mantenemos un servidor.
+
+En el modelo de tres capas, el número de servidores se incrementa según las necesidades del desarrollo.
+
+6. Herramientas y tecnologías mencionadas
+6.1. Wireshark
+¿Qué es? Software que permite capturar tráfico y analizarlo.
+
+¿Para qué sirve? Comprobar cómo se comportan los paquetes de red desde que el cliente hace la petición hasta que el servidor entrega el contenido.
+
+Resultados de captura con Wireshark (según el PDF):
+Protocolo	Resultado
+HTTP	Cliente envía petición GET → servidor contesta con '200 OK' y la página web → Cliente envía petición 204 → servidor contesta '204 No Content' (conexión finalizada)
+HTTPS	Tráfico cifrado → no se pueden ver las peticiones en texto plano
+6.2. SSO (Single Sign-On)
+Sistema de seguridad mencionado en el PDF como ejemplo de seguridad mejorada en aplicaciones web.
+
+Ejemplo: iniciar sesión en un sitio web autenticando contra un controlador de dominio Windows.
+
+6.3. W3C (World Wide Web Consortium)
+Organización fundada por Berners-Lee en 1994.
+
+Objetivo: regular las recomendaciones y los estándares utilizados, asegurando la compatibilidad y la evolución de los servicios web.
+
+7. Casos prácticos del PDF (resumen)
+Caso práctico 1: "Comprobar cómo funciona HTTP con Wireshark"
+Objetivo: Analizar cómo se establece una conexión con un servidor web.
+
+Procedimiento: Conectar a http://apache.org y capturar tráfico con Wireshark.
+
+Resultado HTTP: GET → 200 OK → 204 → 204 No Content.
+
+Resultado HTTPS: Tráfico cifrado, no se ven peticiones en texto plano.
+
+Caso práctico 2: "Analizando modelos en infraestructuras existentes"
+Escenario: Empresa con servidores: MySQL (BBDD), Apache (web), Tomcat (aplicaciones JAVA).
+
+Web estática (index.html): modelo cliente-servidor (Apache responde directamente). Elementos: cliente y servidor web.
+
+Aplicaciones de facturación/contabilidad: modelo de tres capas. Cliente → servidor web → servidor de aplicaciones (Tomcat) → BBDD (MySQL). Elementos: cliente, servidores Apache y Tomcat (capa negocio), servidor BBDD (capa datos).
+
+Caso práctico inicial (resolución)
+Problema: ¿Servidor físico con software de escritorio o aplicación web en la nube?
+
+Factores a analizar: recursos económicos, escalabilidad, dificultad de implantación/mantenimiento, copias de seguridad y plan de contingencia.
+
+Solución adoptada: aplicación web en la nube (accesible desde cualquier ordenador sin instalación, evitar averías hardware y mantenimiento de servidor físico).
+
+8. Términos clave para examen (negritas del PDF)
+Término	Definición según el PDF
+HTTP (HyperText Transfer Protocol)	Protocolo diseñado para transferir documentos HTML, puerto TCP 80, capa 7 OSI
+HTML (HyperText Markup Language)	Lenguaje basado en etiquetas para crear documentos con estilos, imágenes, tablas, multimedia
+URL (Uniform Resource Locator)	Nomenclatura para referenciar objetos y localizar información. Estructura: esquema://servidor/directorio/archivo
+thin clients	Utilizan el modelo de terminal boba (dumb terminal) conectada a un servidor
+Modelo P2P	Topología de malla, cada nodo es cliente y servidor. Ej: Torrent
+Modelo cliente-servidor	Información centralizada en único servidor. Cliente = navegador web
+Modelo de tres capas	Evolución del C/S con servidores especializados (BBDD, web, aplicaciones)
