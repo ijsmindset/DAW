@@ -1,0 +1,204 @@
+Tema 3: Administración de servidores web
+FP Superior DAW (MEDAC)
+1. Objetivos del tema (según el PDF)
+Conocer el protocolo HTTPS
+
+Aplicar configuraciones avanzadas en un servidor web
+
+Descubrir los módulos
+
+Analizar el rendimiento de un servidor web
+
+Optimizar un servidor web
+
+2. El protocolo HTTPS
+2.1. Definición y características
+Concepto	Descripción según el PDF
+HTTPS	Protocolo que permite establecer comunicaciones seguras entre cliente y servidor utilizando el puerto TCP 443
+Propósito	Si alguien captura paquetes en la red, no podría obtener información sensible en texto plano
+Cómo lo hace	Cifra los datos utilizando el protocolo seguro SSL (Secure Socket Layer) – el mismo usado por SSH para conexiones remotas encriptadas
+2.2. Inconvenientes de usar HTTPS (según el PDF)
+Inconveniente	Explicación
+Necesita un certificado válido	Firmado por una CA (Certification Authority) – normalmente conlleva un coste (existen soluciones gratuitas como certbot)
+Posible menor rendimiento	Causado por la cantidad de procesos que ejecuta el servidor para cifrar los paquetes
+El tiempo de respuesta podría aumentar	Debido al rendimiento del servidor
+3. Configuración de PHP
+3.1. Fichero de configuración
+Concepto	Descripción
+php.ini	Fichero donde se define la configuración de PHP
+3.2. Variables importantes del php.ini (según el PDF)
+Variable	Qué hace	Unidad
+memory_limit	Establece el límite de memoria que un script podrá consumir	Megabytes
+upload_max_filesize	Limita el tamaño máximo permitido para subir ficheros al servidor	Megabytes
+post_max_size	Limita el tamaño máximo permitido para peticiones POST	Megabytes
+Regla importante (según el PDF): post_max_size debe ser mayor o igual que upload_max_filesize.
+
+4. Configuración de MySQL
+4.1. Ubicación de configuración
+Los archivos de configuración se almacenan en la carpeta /etc/mysql
+
+Contiene el fichero mysql.cfg
+
+4.2. Parámetros importantes de MySQL
+Parámetro	Qué hace	Valor por defecto
+Bind-address	Establece la dirección desde la cual se podrá acceder a MySQL	127.0.0.1 (localhost) – modificarlo permite acceder desde otro host (riesgo de brechas de seguridad)
+Key_buffer_size	Permite modificar el tamaño del buffer	(no especificado)
+Max_connections	Permite modificar el número de conexiones simultáneas autorizadas	(no especificado)
+5. Configuración de Nginx
+5.1. Estructura de directorios (según el PDF)
+Directorio	Función
+sites-available	Almacena configuración de sitios web (pueden estar activos o no)
+sites-enabled	Almacena enlaces simbólicos a los sitios activados
+nginx.conf (/etc/nginx/)	Fichero de configuración general del servidor web (rendimiento, versión TLS, rutas de logs)
+/var/log/nginx	Ubicación por defecto de los logs de Nginx
+5.2. Variables de configuración de Nginx
+Variable	Qué hace
+worker_processes	Define la cantidad de workers o hilos del procesador que usará Nginx. Por defecto se configura automáticamente (un worker por cada core de la CPU)
+worker_connections	Define la cantidad de peticiones que un worker puede gestionar simultáneamente
+5.3. Logs de Nginx
+Fichero	Qué almacena
+access.log	Información de los clientes que han solicitado recursos
+error.log	Información de los errores que se producen
+6. Configuración HTTPS en Nginx
+6.1. Certificados SSL
+Concepto	Descripción
+Certificados autofirmados (snake-oil)	Certificados genéricos usados por defecto
+OpenSSL	Herramienta para generar certificados personalizados
+CA (Certification Authority)	Autoridad que genera y certifica certificados válidos (normalmente con coste)
+6.2. Pasos para activar SSL en Nginx (según el PDF)
+Generar certificados con OpenSSL
+
+Crear nuevo fichero de configuración en sites-available con configuración SSL y ruta de certificados
+
+Activar el sitio creando enlace simbólico en sites-enabled
+
+Comprobar configuración con nginx -t
+
+Reiniciar el servicio Nginx
+
+Al acceder con HTTPS, el navegador marca "sitio no seguro" porque el certificado es autofirmado
+
+7. Configuración de Apache
+7.1. Estructura de directorios (según el PDF)
+Directorio / Fichero	Función
+/etc/apache	Carpeta principal de configuración
+apache2.conf	Define opciones generales y de rendimiento
+mods-available	Almacena todos los módulos de PHP instalados (activos o no)
+mods-enabled	Enlaces simbólicos a los módulos activados
+ports.conf	Configuración de los puertos utilizados por Apache
+sites-available	Ficheros de configuración de sitios web sin activar
+sites-enabled	Ficheros de configuración de sitios web activados
+/var/log/apache2	Ubicación de los logs de Apache
+7.2. Logs de Apache
+Fichero	Qué almacena
+access.log	Información de los clientes que han solicitado recursos al servidor web
+error.log	Información de los errores que se producen en el servidor web
+7.3. VirtualHost
+Sistema que utiliza Apache para organizar los sitios web alojados
+
+Los virtualHost se almacenan en un fichero con toda la información del sitio web que se está publicando
+
+7.4. Configuración HTTPS en Apache
+Por defecto, Apache viene con un sitio desactivado que usa HTTPS llamado default-ssl.conf
+
+Para activarlo: realizar enlace simbólico del archivo a la carpeta sites-enabled
+
+Al reiniciar el servicio, se puede acceder por HTTPS (pero con certificado no válido)
+
+8. Módulos
+8.1. Definición (según el PDF)
+Módulos: software complementario que aporta funcionalidades extra al servidor web (ej: cifrar datos y servir sitios seguros con HTTPS)
+
+8.2. Módulos PHP
+Permiten que el preprocesador PHP conecte con otros componentes (Apache, Nginx, MySQL, servidor LDAP, servidor de correo)
+
+8.3. Módulos Nginx
+Se clasifican en cinco grupos: Core, Event, HTTP, Mail y Stream
+
+Comando para listar módulos instalados: nginx -V
+
+8.4. Módulos Apache (destacados en el PDF)
+Módulo	Función
+mod_ssl	Permite utilizar protocolos SSL y TLS para servir webs seguras con HTTPS
+mod_auth_digest	Permite realizar autenticación de usuarios usando MD5 Digest
+mod_rewrite	Permite activar la redirección de URL. Necesario para usar ficheros .htaccess
+9. Pruebas de rendimiento
+9.1. Apache Benchmark (AB)
+Concepto	Descripción
+Apache Benchmark (AB)	Aplicación incluida en el paquete apache2-utils que permite testear el rendimiento de un servidor web (cualquier tipo: Apache, Nginx o IIS)
+Funcionamiento	Consiste en realizar una gran cantidad de peticiones a un servidor web
+9.2. Parámetros del comando AB (según el PDF)
+Parámetro	Significado
+-k	Usar Keep Alive (mantener conexión abierta)
+-n	Número de peticiones que se realizarán
+-c	Cantidad de conexiones concurrentes
+-g ab.csv	Guarda el resultado en un archivo CSV
+-H 'Accept-Encoding: gzip,deflate'	Imita las peticiones que realizaría un navegador web
+9.3. Instalación y uso
+bash
+sudo apt-get install apache2-utils
+sudo ab -k -n2000 -c200 -H 'Accept-Encoding: gzip,deflate' -g ab.csv http://IP_WEBSERVER/
+9.4. Métricas que muestra AB (según el PDF)
+Métrica	Qué mide
+Requests per second	Peticiones por segundo (media) – principal indicador de rendimiento
+Time per request	Tiempo por petición (media)
+Transfer rate	Tasa de transferencia (Kbytes/seg)
+Failed requests	Peticiones fallidas
+9.5. Comparativa del PDF (Nginx vs Apache en las pruebas)
+Métrica	Nginx	Apache
+Requests per second	269.89 [#/sec]	112.01 [#/sec]
+Time per request	370.522 ms	892.752 ms
+Transfer rate	21306.22 Kbytes/sec	2527.86 Kbytes/sec
+Nota: En las pruebas del PDF, Nginx mostró mejores resultados de rendimiento que Apache.
+
+10. Casos prácticos del PDF (resumen)
+Caso práctico 1: "Activar SSL Nginx"
+Escenario: VPS con Nginx, quiere activar HTTPS para demostrar ventajas a clientes
+
+Pasos:
+
+Instalar Nginx (apt-get install nginx)
+Crear carpeta para certificados y otorgar permisos
+Usar OpenSSL para crear certificados (autofirmados, no necesita CA por ser desarrollo)
+Crear nuevo sitio en sites-available con configuración SSL y ruta de certificados
+Activar sitio (enlace simbólico a sites-enabled)
+Comprobar configuración y reiniciar Nginx
+Caso práctico 2: "Comparativa de rendimiento Nginx vs Apache"
+Escenario: Pedro necesita informe de rendimiento para clientes
+
+Metodología:
+
+Instalar dos VPS con mismas características (uno Nginx, otro Apache + PHP + MySQL)
+Crear index.php con phpinfo()
+Usar comando AB (Apache Benchmark) para realizar pruebas
+Contrastar datos obtenidos
+Resolución del caso práctico inicial
+Problema: No se pueden subir archivos grandes al servidor (archivos pequeños sí funcionan)
+
+Causa probable: Configuración de PHP
+
+Solución:
+
+Aumentar límites de post_max_size y upload_max_filesize en php.ini
+Reiniciar el servicio web
+Realizar pruebas
+11. Términos clave para examen (negritas del PDF)
+Término	Definición según el PDF
+Conocer el protocolo HTTPS	Comunicaciones seguras cliente-servidor, puerto 443, cifra con SSL
+Aplicar configuraciones avanzadas en un servidor web	Modificar ficheros de configuración (php.ini, nginx.conf, etc.)
+Descubrir los módulos	Software complementario que aporta funcionalidades extra
+Analizar el rendimiento de un servidor web	Usar Apache Benchmark (AB) para testear rendimiento
+Optimizar un servidor web	Ajustar configuración según resultados de pruebas
+HTTPS	Protocolo seguro puerto 443, cifra con SSL
+CA (Certification Authority)	Autoridad que certifica certificados válidos
+php.ini	Fichero de configuración de PHP
+memory_limit	Límite de memoria que consumirá un script PHP
+upload_max_filesize	Tamaño máximo para subir ficheros
+post_max_size	Tamaño máximo para peticiones POST (debe ser >= upload_max_filesize)
+Bind-address (MySQL)	Dirección desde la que acceder a MySQL (127.0.0.1 por defecto)
+worker_processes (Nginx)	Cantidad de workers (uno por core de CPU)
+worker_connections (Nginx)	Peticiones que un worker gestiona simultáneamente
+VirtualHost (Apache)	Sistema de Apache para organizar sitios web
+mod_ssl (Apache)	Módulo para SSL/TLS y HTTPS
+mod_rewrite (Apache)	Redirección de URL, necesario para .htaccess
+Apache Benchmark (AB)	Herramienta para testear rendimiento de servidores web
